@@ -1,4 +1,4 @@
-(ns common.utility.communication
+(ns common.connect.utility.communication
   (:require [org.httpkit.client :as http]
             [clojure.data.json :as json]))
 
@@ -14,7 +14,7 @@
                    @(http/get endpoint {:query-params all-params}))
         response-body (:body response)
         response-params (if response-body
-                         (read-string (get (json/read-str (:body response)) "value"))
+                         (clojure.core/read-string (get (json/read-str (:body response)) "value"))
                          nil)]
     ; returns a map
     {:response response
