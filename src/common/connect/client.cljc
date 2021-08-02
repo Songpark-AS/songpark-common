@@ -1,7 +1,7 @@
 (ns common.connect.client
   (:require [org.httpkit.client :as http]
             [clojure.data.json :as json]
-            [common.connect.utility.communication :as communication]))
+            [common.utility.communication :as communication]))
 ;; This is relative path:
 ;; src/common/connect/client.cljc
 
@@ -17,12 +17,7 @@
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/client/init"}} parameters
         {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
-    (if (:success response-params)
+    (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
       (communication/print-response-error endpoint response-params))))
-
-(comment
-  "Test with repl"
-  (init {:nickname "thanks.hope"})
-  )

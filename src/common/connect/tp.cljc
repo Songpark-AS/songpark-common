@@ -1,7 +1,5 @@
 (ns common.connect.tp
-  (:require [org.httpkit.client :as http]
-            [clojure.data.json :as json]
-            [common.utility.communication :as communication]))
+  (:require [common.utility.communication :as communication]))
 
 (defn init 
   "This endpoint should be used by a teleporter to tell the platform that it is turned on and available on the mqtt network. 
@@ -17,7 +15,7 @@
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/init"}} parameters
         {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
-    (if (:success response-params)
+    (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
       (communication/print-response-error endpoint response-params))))
@@ -36,7 +34,7 @@
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/disconnect"}} parameters
         {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
-    (if (:success response-params)
+    (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
       (communication/print-response-error endpoint response-params))))
@@ -56,9 +54,7 @@
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/turnoff"}} parameters
         {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
-    (if (:success response-params)
+    (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
       (communication/print-response-error endpoint response-params))))
-
-(comment (turnoff {:tpid 1010}))

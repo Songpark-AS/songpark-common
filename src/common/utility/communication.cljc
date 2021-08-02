@@ -1,4 +1,4 @@
-(ns common.connect.utility.communication
+(ns common.utility.communication
   (:require [org.httpkit.client :as http]
             [clojure.data.json :as json]))
 
