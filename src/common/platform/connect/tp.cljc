@@ -1,4 +1,4 @@
-(ns common.connect.tp
+(ns common.platform.connect.tp
   (:require [common.utility.communication :as communication]))
 
 (defn init 

@@ -1,9 +1,6 @@
-(ns common.connect.client
-  (:require [org.httpkit.client :as http]
-            [clojure.data.json :as json]
-            [common.utility.communication :as communication]))
-;; This is relative path:
-;; src/common/connect/client.cljc
+(ns common.platform.connect.client
+  (:require [common.utility.communication :as communication]))
+
 
 (defn init
   "This endpoint should be used by the client (i.e. the phone app) to request a connection to a specific tp.

@@ -14,7 +14,9 @@
                    @(http/get endpoint {:query-params all-params}))
         response-body (:body response)
         response-params (if response-body
-                         (clojure.core/read-string (get (json/read-str (:body response)) "value"))
+                          (if (= 400 (:status response))
+                            (clojure.core/read-string (:body response))
+                            (clojure.core/read-string (get (json/read-str (:body response)) "value")))
                          nil)]
     ; returns a map
     {:response response
