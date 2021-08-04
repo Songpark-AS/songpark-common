@@ -13,7 +13,7 @@
    "
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/client/init"}} parameters
-        {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
+        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)

@@ -54,26 +54,27 @@
   (mh/subscribe connection {topic 0} (fn [^String topic _ ^bytes payload]
                                           (let [payload (String. payload "UTF-8")
                                                 {pointer :pointer
-                                                 arguments :arguments
-                                                 :as input} (clojure.core/read-string payload)]
+                                                 arguments :arguments} (clojure.core/read-string payload)]
                                             (apply (get-in handler-map pointer) arguments)))))
   ([{connection :connection
      topic :topic}
     handler-map]
    (subscribe connection topic handler-map)))
 
+
 (comment "testing area"
 
          (let [conn-map (init "topico")
-               handler-map {:a {:a #(println (apply - %&))
-                                :b #(println (apply + %&))}
-                            :c {:b #(println (apply * %&))
-                                :c #(println (apply / %&))}}]
+               handler-map {:vanlig-op {:minus #(println (apply - %&))
+                                        :pluss #(println (apply + %&))}
+                            :uvanlig-op {:gange #(println (apply * %&))
+                                         :dele #(println (apply / %&))}}]
+           
            (subscribe conn-map handler-map)
-           (println (publish conn-map [[:a :b][1 2 3]]))
-           (publish conn-map [[:a :a] [1 2 3 4]])
-           (publish conn-map [[:a :b] [1 2 3 5]])
-           (publish conn-map [[:c :b] [1 2]])
-           (publish conn-map [[:c :c] [16 2]]))
-         )
+
+           (publish conn-map [[:vanlig-op :pluss][]])
+           (publish conn-map [[:vanlig-op :minus] [1 2 3 4]])
+           (publish conn-map [[:vanlig-op :pluss] [1 2 3 5]])
+           (publish conn-map [[:uvanlig-op :gange] [1 2]])
+           (publish conn-map [[:uvanlig-op :dele] [16 2]])))
          

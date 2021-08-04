@@ -9,9 +9,9 @@
 
 (defn platform-get-request
   "Creates simple HTTP GET request from platform"
-  [{endpoint :endpoint :as all-params}]
+  [endpoint parameters]
   (let [response (try
-                   @(http/get endpoint {:query-params all-params}))
+                   @(http/get endpoint {:query-params parameters}))
         response-body (:body response)
         response-params (if response-body
                           (if (= 400 (:status response))

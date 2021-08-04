@@ -14,11 +14,12 @@
    Use \"tpid=all\" to affect all teleporters in the database."
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/init"}} parameters
-        {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
+        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
       (communication/print-response-error endpoint response-params))))
+
 
 (defn disconnect
   "This endpoint should be used to tell the db that the tp is available for a new connection. 
@@ -33,7 +34,7 @@
    Use \"tpid=all\" to affect all teleporters in the database."
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/disconnect"}} parameters
-        {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
+        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
@@ -53,7 +54,7 @@
    Use \"tpid=all\" to affect all teleporters in the database."
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/turnoff"}} parameters
-        {response-params :response-params} (communication/platform-get-request (assoc parameters :endpoint endpoint))]
+        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
