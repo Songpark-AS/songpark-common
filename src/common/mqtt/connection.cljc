@@ -3,9 +3,14 @@
 
 
 (defn init
-  "Initiates a simple mqtt connection using machine head.
+  "This function initiates a simple mqtt connection using machine head.
    Expects a topic name.
    Uses default URI: \"tcp://127.0.0.1:1883\", unless other URI is specified
+   Example uses:
+   
+   (init \"MY-TOPIC\")
+   (init \"MY-TOPIC\" \"URI\")
+
    Returns a connection-map on format:
    
    {:connection CONNECTION
@@ -20,8 +25,9 @@
 
 
 (defn publish
-  "Publishes code to mqtt server
-   Expects a connection, a topic, and a map with :pointer and :arguments
+  "This function publishes an instruction to the mqtt server.
+   Expects a connection-map and a vector of pointers and arguments
+   Or, expects a mh-connection, a topic-name, and a vector of pointers and arguments.
    \"pointer\" should be a vector of keys, that specifies the position of a handler function in a clojure map
    Consider the following handler map:
 
@@ -34,8 +40,8 @@
    Result would be =6
    Example uses:
    
-   (publish my-connection my-topic {:pointer [:a :b] :arguments [1 2 3]})
-   (publish connection-map [[:a :b][1 2 3]])"
+   (publish MY-CONNECTION MY-TOPIC [[:a :b][1 2 3]])
+   (publish CONNECTION-MAP [[:a :b][1 2 3]])"
   ([connection topic input-map]
   (mh/publish connection topic (str input-map)))
   
@@ -44,12 +50,12 @@
 
 
 (defn subscribe
-  "Subscribes to code on a mqtt server
-   Expects a connection, a topic, and a handler-map that sorts all functions in a map.
+  "Subscribes to a topic on an mqtt server, and waits for instructions.
+   Expects a mh-connection, a topic-name, and a handler-map.
    Example use:
    
-   (subscribe connection topic handler-map)
-   (subscribe connection-map handler-map)"
+   (subscribe CONNECTION TOPIC HANDLER-MAP)
+   (subscribe CONNECTION-MAP HANDLER-MAP)"
   ([connection topic handler-map]
   (mh/subscribe connection {topic 0} (fn [^String topic _ ^bytes payload]
                                           (let [payload (String. payload "UTF-8")

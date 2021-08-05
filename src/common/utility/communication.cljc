@@ -20,5 +20,4 @@
                          nil)]
     ; returns a map
     {:response response
-     :response-body response-body
      :response-params response-params}))

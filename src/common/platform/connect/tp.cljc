@@ -2,19 +2,22 @@
   (:require [common.utility.communication :as communication]))
 
 (defn init 
-  "This endpoint should be used by a teleporter to tell the platform that it is turned on and available on the mqtt network. 
-   The platform expects tpid to be tagged on as a parameter. The parameter should be named \"tpid\".
-   Specified endpoint is optional. Example uses:
+  "This function should be used by a teleporter to tell the platform that it is turned on.  
+   The function expects a map with a tpid. Specified endpoint is optional (default: \"localhost:3000\")  
+   
+   Example uses:
+    (init {:tpid \"1010\"})
+    (init {:tpid \"1010\"
+           :endpoint ENDPOINT})
 
-   (init {:tpid 1010})
-   (init {:tpid \"all\"})
-   (init {:tpid \"all\"
-          :endpoint ENDPOINT})
-
-   Use \"tpid=all\" to affect all teleporters in the database."
+   Returns:
+    {:status STATUS
+     :status-desc STATUS-DESCRIPTION
+     :uuid UUID}"
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/init"}} parameters
-        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
+        {response :response
+         response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
@@ -22,19 +25,21 @@
 
 
 (defn disconnect
-  "This endpoint should be used to tell the db that the tp is available for a new connection. 
-   This endpoint sets the following value for a teleporter available_status=true. This endpoint expects a parameter \"tpid\".
-   Specified endpoint is optional. Example uses:
+  "This function should be used to tell the platform that the tp has disconnected and is available for a new connection.    
+   The function expects a map with a tpid. Specified endpoint is optional (default: \"localhost:3000\")  
    
-   (disconnect {:tpid 0100})
-   (disconnect {:tpid \"all\"})
-   (init {:tpid \"all\"
-          :endpoint ENDPOINT})
-
-   Use \"tpid=all\" to affect all teleporters in the database."
+   Example uses:  
+    (disconnect {:tpid \"0100\"})
+    (disconnect {:tpid \"0100\"
+                 :endpoint ENDPOINT})
+   Returns:
+    {:status STATUS
+     :status-desc STATUS-DESCRIPTION
+     :uuid UUID}"
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/disconnect"}} parameters
-        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
+        {response :response
+         response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
@@ -42,19 +47,20 @@
 
 
 (defn turnoff
-  "This endpoint should be used to tell the db that a tp is turned off.
-   This endpoint sets the following values for a teleporter available_status=false and on_status=false.
-   This endpoint expects a parameter \"tpid\". Specified endpoint is optional. Example uses:
+  "This function should be used to tell the platform that the tp is turned off and unavailable.  
+   The function expects a map with a tpid. Specified endpoint is optional (default: \"localhost:3000\")  
    
-   (turnoff {:tpid 0100})
-   (turnoff {:tpid \"all\"})
-   (init {:tpid \"all\"
-          :endpoint ENDPOINT})
-
-   Use \"tpid=all\" to affect all teleporters in the database."
+   Example uses:  
+    (turnoff {:tpid \"0100\"})
+    (turnoff {:tpid \"0100\"
+              :endpoint ENDPOINT})
+   Returns:
+    {:status STATUS
+     :status-desc STATUS-DESCRIPTION}"
   [parameters]
   (let [{endpoint :endpoint :or {endpoint "http://localhost:3000/connect/tp/turnoff"}} parameters
-        {response-params :response-params} (communication/platform-get-request endpoint parameters)]
+        {response :response
+         response-params :response-params} (communication/platform-get-request endpoint parameters)]
     (if (:status response-params)
       #?(:clj response-params ;Returns a clojure map if clojure
          :cljs)
