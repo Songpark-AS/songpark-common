@@ -4,7 +4,7 @@
 
 (defn init
   "This function should be used by the client (i.e. the phone app) to request a connection to a specific tp. 
-   The function expects a map with a nickname. Specified endpoint is optional (default: \"localhost:3000\")
+   The function expects a map with a nickname. Specified endpoint is optional (default: \"http://localhost:3000/connect/client/init\")
    
    Example uses:
     (init {:nickname \"christians.dream\"})

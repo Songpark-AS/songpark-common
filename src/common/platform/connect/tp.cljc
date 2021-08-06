@@ -3,7 +3,7 @@
 
 (defn init 
   "This function should be used by a teleporter to tell the platform that it is turned on.  
-   The function expects a map with a tpid. Specified endpoint is optional (default: \"localhost:3000\")  
+   The function expects a map with a tpid. Specified endpoint is optional (default: \"http://localhost:3000/connect/tp/init\")  
    
    Example uses:
     (init {:tpid \"1010\"})
@@ -26,7 +26,7 @@
 
 (defn disconnect
   "This function should be used to tell the platform that the tp has disconnected and is available for a new connection.    
-   The function expects a map with a tpid. Specified endpoint is optional (default: \"localhost:3000\")  
+   The function expects a map with a tpid. Specified endpoint is optional (default: \"http://localhost:3000/connect/tp/disconnect\")  
    
    Example uses:  
     (disconnect {:tpid \"0100\"})
@@ -48,7 +48,7 @@
 
 (defn turnoff
   "This function should be used to tell the platform that the tp is turned off and unavailable.  
-   The function expects a map with a tpid. Specified endpoint is optional (default: \"localhost:3000\")  
+   The function expects a map with a tpid. Specified endpoint is optional (default: \"http://localhost:3000/connect/tp/turnoff\")  
    
    Example uses:  
     (turnoff {:tpid \"0100\"})
