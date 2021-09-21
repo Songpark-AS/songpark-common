@@ -4,9 +4,12 @@
             [songpark.common.taxonomy.mqtt]))
 
 
+(def ip-regex #"\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\b")
+
+
 (spec/def :teleporter/id int?)
 (spec/def :teleporter/voip string?)
-(spec/def :teleporter/ip string?)
+(spec/def :teleporter/ip (spec/and string? #(re-matches ip-regex %)))
 (spec/def :teleporter/on boolean?)
 (spec/def :teleporter/available boolean?)
 (spec/def :teleporter/nickname string?)
