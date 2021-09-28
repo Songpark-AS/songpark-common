@@ -4,6 +4,9 @@
             [songpark.common.taxonomy.mqtt]))
 
 
+(def mac-regex #"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$")
+
+(spec/def :teleporter/mac (spec/and string? #(re-matches mac-regex %)))
 (spec/def :teleporter/id int?)
 (spec/def :teleporter/voip string?)
 (spec/def :teleporter/ip string?)
@@ -11,7 +14,7 @@
 (spec/def :teleporter/available boolean?)
 (spec/def :teleporter/nickname string?)
 (spec/def :teleporter/bits string?)
-(spec/def :teleporter/uuid (spec/nilable string?))
+(spec/def :teleporter/uuid (spec/nilable uuid?))
 
 (spec/def :teleporter/teleporter
   (spec/keys :req [:teleporter/voip
@@ -29,3 +32,7 @@
                    :teleporter/uuid
                    :mqtt/username
                    :mqtt/password]))
+
+
+(spec/def :teleporter/uuids
+  (spec/coll-of (spec/keys :req [:teleporter/uuid])))
