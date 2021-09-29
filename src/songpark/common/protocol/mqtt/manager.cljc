@@ -5,4 +5,4 @@
 (defprotocol IMqttManager
   (subscribe [this topics])
   (unsubscribe [this topics])
-  (publish! [this topic msg]))
+  (publish [this topic msg]))
