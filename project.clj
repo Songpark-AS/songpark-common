@@ -29,7 +29,8 @@
                  ;; communication
                  [cljs-ajax "0.8.3"]
                  [tick "0.5.0-RC1"]
-
+                 [clojurewerkz/machine_head "1.0.0"]
+                 
                  ;; data format
                  [com.cognitect/transit-clj "1.0.324"]
                  [com.cognitect/transit-cljs "0.8.269"]
@@ -44,10 +45,7 @@
                  [cprop "0.1.11"]
 
                  ;;filesystem
-                 [me.raynes/fs "1.4.6"]
-
-                 ;; structure
-                 [com.stuartsierra/component "1.0.0"]]
+                 [me.raynes/fs "1.4.6"]]
 
   :repl-options {:init-ns songpark.core}
 
