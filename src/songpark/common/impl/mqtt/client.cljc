@@ -25,7 +25,7 @@
   (str scheme "://" host ":" port))
 
 (defn- gen-paho-options [{:keys [client-id options connect-options]}]
-  (-> {:client-id client-id}
+  (-> {:client-id (mh/generate-id)}
       (merge (or options default-options))
       (merge {:opts connect-options})))
 
