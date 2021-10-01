@@ -9,6 +9,7 @@
 (spec/def :teleporter/id int?)
 (spec/def :teleporter/voip string?)
 (spec/def :teleporter/ip (spec/and string? #(re-matches ip-regex %)))
+(spec/def :teleporter/ipv6 string?)
 (spec/def :teleporter/mac (spec/and string? #(re-matches mac-regex %)))
 (spec/def :teleporter/on boolean?)
 (spec/def :teleporter/available boolean?)
