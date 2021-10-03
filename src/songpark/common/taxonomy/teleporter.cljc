@@ -27,12 +27,9 @@
                    :teleporter/uuid]
              :opt [:teleporter/id]))
 
-(spec/def :teleporter/connect
+(spec/def :teleporter/init
   (spec/keys :req [:teleporter/nickname
-                   :teleporter/bits
-                   :teleporter/uuid
-                   :mqtt/username
-                   :mqtt/password]))
+                   :teleporter/mac]))
 
 
 (spec/def :teleporter/uuids
