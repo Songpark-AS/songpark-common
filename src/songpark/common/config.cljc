@@ -2,7 +2,7 @@
 
 (def config (atom {:mqtt-settings {:host "127.0.0.1"
                                    :port 8000
-                                   :client-id "this-should-be-auto-generated"
+                                   :client-id "app"
                                    }}))
 
 #?(:cljs (def debug? goog.DEBUG))
