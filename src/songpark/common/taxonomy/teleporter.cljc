@@ -27,3 +27,7 @@
 (spec/def :teleporter/init
   (spec/keys :req [:teleporter/nickname
                    :teleporter/mac]))
+
+
+(spec/def :teleporter/ids
+  (spec/coll-of (spec/keys :req [:teleporter/id])))
