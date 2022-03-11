@@ -1,4 +1,4 @@
-(defproject songpark/common "0.1.1-SNAPSHOT"
+(defproject songpark/common "0.2.0"
 
   :description "Songpark common library"
 
