@@ -1,4 +1,4 @@
-(defproject songpark/common "0.2.0"
+(defproject songpark/common "0.3.0-SNAPSHOT"
 
   :description "Songpark common library"
 
@@ -14,13 +14,10 @@
                  ;; and use things as is for dev work
 
                  ;; wiring (forms)
-                 [ez-wire "0.5.0-beta3"]
+                 [ez-wire "0.5.0"]
 
                  ;; matching
                  [org.clojure/core.match "1.0.0"]
-
-                 ;; i18n
-                 [tongue "0.3.0"]
 
                  ;; structure
                  [re-frame "1.2.0"]
@@ -28,9 +25,8 @@
 
                  ;; communication
                  [cljs-ajax "0.8.3"]
-                 [tick "0.5.0-RC1"]
-                 [clojurewerkz/machine_head "1.0.0"]
-                 
+                 [tick "0.5.0-RC5"]
+
                  ;; data format
                  [com.cognitect/transit-clj "1.0.324"]
                  [com.cognitect/transit-cljs "0.8.269"]

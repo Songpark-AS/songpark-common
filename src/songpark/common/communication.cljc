@@ -50,13 +50,13 @@
                                java.time/Month (transit/write-handler (rep "time/month") time-fn)
                                java.time/DayOfWeek (transit/write-handler (rep "time/day-of-week") time-fn)
                                java.time/Year (transit/write-handler (rep "time/year") time-fn)})
-    :clj (def write-handlers {java.time.Instant (transit/write-handler (rep "time/instant") time-fn)
-                              java.time.Month (transit/write-handler (rep "time/month") time-fn)
-                              java.time.DayOfWeek (transit/write-handler (rep "time/day-of-week") time-fn)
-                              java.time.Year (transit/write-handler (rep "time/year") time-fn)}))
+    :clj  (def write-handlers {java.time.Instant (transit/write-handler (rep "time/instant") time-fn)
+                               java.time.Month (transit/write-handler (rep "time/month") time-fn)
+                               java.time.DayOfWeek (transit/write-handler (rep "time/day-of-week") time-fn)
+                               java.time.Year (transit/write-handler (rep "time/year") time-fn)}))
 
 #? (:cljs (def writer (transit/writer :json {:handlers write-handlers}))
-    :clj (def writer (transit/writer (java.io.ByteArrayOutputStream. 4096) :json {:handlers write-handlers})))
+    :clj  (def writer (transit/writer (java.io.ByteArrayOutputStream. 4096) :json {:handlers write-handlers})))
 
 (def read-handlers {"time/instant" (transit/read-handler (fn [obj] (t/instant obj)))
                     "time/month" (transit/read-handler (fn [obj] (t/month obj)))
@@ -81,24 +81,45 @@
               (assoc out k v)))
           {} params))
 
-#? (:cljs (defn- get-handler+error-handler [chained]
-            (cond (vector? chained)
-                  [(fn [data]
-                     (rf/dispatch (into chained data)))
-                   nil]
-                  (map? chained)
-                  ((juxt :handler :error-handler) chained)
+#? (:cljs (defn- get-handler+error-handler [chained-success chained-error ?context]
+            (let [success (cond (vector? chained-success)
+                                (fn [data]
+                                  (rf/dispatch (into chained-success (merge ?context
+                                                                            data))))
 
-                  (keyword? chained)
-                  [(fn [data]
-                     (rf/dispatch [chained data]))
-                   nil]
+                                ;; this is to support backward compatible behaviour
+                                (and (map? chained-success)
+                                     (nil? chained-error))
+                                (:handler chained-success)
 
-                  :else
-                  [nil nil])))
+                                (keyword? chained-success)
+                                (fn [data]
+                                  (rf/dispatch [chained-success (merge ?context
+                                                                       data)]))
 
-#? (:cljs (defn- event-fx-request-map [params chained]
-            (let [[handler error-handler] (get-handler+error-handler chained)]
+                                :else
+                                nil)
+                  error (cond (vector? chained-error)
+                              (fn [data]
+                                (rf/dispatch (into chained-error (merge ?context
+                                                                        data))))
+
+                              ;; this is to support backward compatible behaviour
+                              (and (map? chained-success)
+                                   (nil? chained-error))
+                              (:error chained-success)
+
+                              (keyword? chained-error)
+                              (fn [data]
+                                (rf/dispatch [chained-error (merge ?context
+                                                                   data)]))
+
+                              :else
+                              nil)]
+              [success error])))
+
+#? (:cljs (defn- event-fx-request-map [params chained-success chained-error ?context]
+            (let [[handler error-handler] (get-handler+error-handler chained-success chained-error ?context)]
               (update
                (merge {:params params
                        :writer writer
@@ -122,19 +143,19 @@
                       {:error-handler error-handler}))
              :headers massage-headers @credentials))
 
-    :clj (defn- manual-request-map [params handler error-handler]
-           (update
-            (merge {:params params
-                    :writer writer
-                    :type :json
-                    :handlers write-handlers
-                    :with-credentials true
-                    :response-format response-format}
-                   (when handler
-                     {:handler handler})
-                   (when error-handler
-                     {:error-handler error-handler}))
-            :headers massage-headers @credentials)))
+    :clj  (defn- manual-request-map [params handler error-handler]
+            (update
+             (merge {:params params
+                     :writer writer
+                     :type :json
+                     :handlers write-handlers
+                     :with-credentials true
+                     :response-format response-format}
+                    (when handler
+                      {:handler handler})
+                    (when error-handler
+                      {:error-handler error-handler}))
+             :headers massage-headers @credentials)))
 
 
 
@@ -169,22 +190,22 @@
    (ajax/DELETE (str @base-url uri)
                 (manual-request-map params handler error-handler))))
 
-#? (:cljs (rf/reg-event-fx :http/get (fn [_ [_ uri params chained]]
+#? (:cljs (rf/reg-event-fx :http/get (fn [_ [_ uri params chained-success chained-error ?context]]
                                        (ajax/GET (str @base-url uri)
-                                                 (event-fx-request-map (encode-get-params params) chained))
+                                                 (event-fx-request-map (encode-get-params params) chained-success chained-error ?context))
                                        nil)))
 
-#? (:cljs (rf/reg-event-fx :http/post (fn [_ [_ uri params chained]]
+#? (:cljs (rf/reg-event-fx :http/post (fn [_ [_ uri params chained-success chained-error ?context]]
                                         (ajax/POST (str @base-url uri)
-                                                   (event-fx-request-map params chained))
+                                                   (event-fx-request-map params chained-success chained-error ?context))
                                         nil)))
 
-#? (:cljs (rf/reg-event-fx :http/put (fn [_ [_ uri params chained]]
+#? (:cljs (rf/reg-event-fx :http/put (fn [_ [_ uri params chained-success chained-error ?context]]
                                        (ajax/PUT (str @base-url uri)
-                                                 (event-fx-request-map params chained))
+                                                 (event-fx-request-map params chained-success chained-error ?context))
                                        nil)))
 
-#? (:cljs (rf/reg-event-fx :http/delete (fn [_ [_ uri params chained]]
+#? (:cljs (rf/reg-event-fx :http/delete (fn [_ [_ uri params chained-success chained-error ?context]]
                                           (ajax/DELETE (str @base-url uri)
-                                                       (event-fx-request-map params chained))
+                                                       (event-fx-request-map params chained-success chained-error ?context))
                                           nil)))
