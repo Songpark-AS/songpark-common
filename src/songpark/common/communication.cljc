@@ -84,8 +84,7 @@
 #? (:cljs (defn- get-handler+error-handler [chained-success chained-error ?context]
             (let [success (cond (vector? chained-success)
                                 (fn [data]
-                                  (rf/dispatch (into chained-success (merge ?context
-                                                                            data))))
+                                  (rf/dispatch (into chained-success [data ?context])))
 
                                 ;; this is to support backward compatible behaviour
                                 (and (map? chained-success)
@@ -94,15 +93,13 @@
 
                                 (keyword? chained-success)
                                 (fn [data]
-                                  (rf/dispatch [chained-success (merge ?context
-                                                                       data)]))
+                                  (rf/dispatch [chained-success data ?context]))
 
                                 :else
                                 nil)
                   error (cond (vector? chained-error)
                               (fn [data]
-                                (rf/dispatch (into chained-error (merge ?context
-                                                                        data))))
+                                (rf/dispatch (into chained-error [data ?context])))
 
                               ;; this is to support backward compatible behaviour
                               (and (map? chained-success)
@@ -111,8 +108,7 @@
 
                               (keyword? chained-error)
                               (fn [data]
-                                (rf/dispatch [chained-error (merge ?context
-                                                                   data)]))
+                                (rf/dispatch [chained-error data ?context]))
 
                               :else
                               nil)]
